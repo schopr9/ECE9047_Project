@@ -1,0 +1,1574 @@
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 1
+
+
+   1              		.cpu cortex-m0
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 6
+  10              		.eabi_attribute 34, 0
+  11              		.eabi_attribute 18, 4
+  12              		.code	16
+  13              		.file	"main.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.global	initializeCapSenseBaseline
+  18              		.data
+  19              		.type	initializeCapSenseBaseline, %object
+  20              		.size	initializeCapSenseBaseline, 1
+  21              	initializeCapSenseBaseline:
+  22 0000 01       		.byte	1
+  23              		.section	.text.main,"ax",%progbits
+  24              		.align	2
+  25              		.global	main
+  26              		.code	16
+  27              		.thumb_func
+  28              		.type	main, %function
+  29              	main:
+  30              	.LFB35:
+  31              		.file 1 ".\\main.c"
+   1:.\main.c      **** /******************************************************************************
+   2:.\main.c      **** * Project Name		: PSoC_4_BLE_CapSense_Proximity
+   3:.\main.c      **** * File Name			: main.c
+   4:.\main.c      **** * Version 			: 1.0
+   5:.\main.c      **** * Device Used		: CY8C4247LQI-BL483
+   6:.\main.c      **** * Software Used		: PSoC Creator 3.1
+   7:.\main.c      **** * Compiler    		: ARM GCC 4.8.4, ARM RVDS Generic, ARM MDK Generic
+   8:.\main.c      **** * Related Hardware	: CY8CKIT-042-BLE Bluetooth Low Energy Pioneer Kit 
+   9:.\main.c      **** * Owner				: ROIT
+  10:.\main.c      **** *
+  11:.\main.c      **** ********************************************************************************
+  12:.\main.c      **** * Copyright (2014), Cypress Semiconductor Corporation. All Rights Reserved.
+  13:.\main.c      **** ********************************************************************************
+  14:.\main.c      **** * This software is owned by Cypress Semiconductor Corporation (Cypress)
+  15:.\main.c      **** * and is protected by and subject to worldwide patent protection (United
+  16:.\main.c      **** * States and foreign), United States copyright laws and international treaty
+  17:.\main.c      **** * provisions. Cypress hereby grants to licensee a personal, non-exclusive,
+  18:.\main.c      **** * non-transferable license to copy, use, modify, create derivative works of,
+  19:.\main.c      **** * and compile the Cypress Source Code and derivative works for the sole
+  20:.\main.c      **** * purpose of creating custom software in support of licensee product to be
+  21:.\main.c      **** * used only in conjunction with a Cypress integrated circuit as specified in
+  22:.\main.c      **** * the applicable agreement. Any reproduction, modification, translation,
+  23:.\main.c      **** * compilation, or representation of this software except as specified above 
+  24:.\main.c      **** * is prohibited without the express written permission of Cypress.
+  25:.\main.c      **** *
+  26:.\main.c      **** * Disclaimer: CYPRESS MAKES NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, WITH 
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 2
+
+
+  27:.\main.c      **** * REGARD TO THIS MATERIAL, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+  28:.\main.c      **** * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+  29:.\main.c      **** * Cypress reserves the right to make changes without further notice to the 
+  30:.\main.c      **** * materials described herein. Cypress does not assume any liability arising out 
+  31:.\main.c      **** * of the application or use of any product or circuit described herein. Cypress 
+  32:.\main.c      **** * does not authorize its products for use as critical components in life-support 
+  33:.\main.c      **** * systems where a malfunction or failure may reasonably be expected to result in 
+  34:.\main.c      **** * significant injury to the user. The inclusion of Cypress' product in a life-
+  35:.\main.c      **** * support systems application implies that the manufacturer assumes all risk of 
+  36:.\main.c      **** * such use and in doing so indemnifies Cypress against all charges. 
+  37:.\main.c      **** *
+  38:.\main.c      **** * Use of this Software may be limited by and subject to the applicable Cypress
+  39:.\main.c      **** * software license agreement. 
+  40:.\main.c      **** *******************************************************************************/
+  41:.\main.c      **** 
+  42:.\main.c      **** /******************************************************************************
+  43:.\main.c      **** *                           THEORY OF OPERATION
+  44:.\main.c      **** *******************************************************************************
+  45:.\main.c      **** * The project will show case the capability of PSoC 4 BLE to communicate with
+  46:.\main.c      **** * a BLE Central device. The data communicated is the CapSense proximity value,
+  47:.\main.c      **** * sent from PSoC 4 BLE over a custom service. This custom service allows
+  48:.\main.c      **** * notifications to be sent to central device after notifications are enabled.
+  49:.\main.c      **** * This project utilizes CapSense component to detect the change in capacitance
+  50:.\main.c      **** * of the proximity sensor and report this to central device over BLE.
+  51:.\main.c      **** * The BLE central device can be either BLE capable smartphone with associated 
+  52:.\main.c      **** * mobile application or CySmart PC tool.
+  53:.\main.c      **** * This project also inludes low power mode operation, idle for battery operated 
+  54:.\main.c      **** * devices. The project utlizes Deep Sleep feature of both BLESS and CPU to remain 
+  55:.\main.c      **** * in low power mode as much as possible, while maintaining the BLE connection and  
+  56:.\main.c      **** * data transfer. This allows the device to run on coin cell battery for long time.
+  57:.\main.c      **** *
+  58:.\main.c      **** * Note:
+  59:.\main.c      **** * The programming pins have been configured as GPIO, and not SWD. This is because 
+  60:.\main.c      **** * when programming pins are configured for SWD, then the silicon consumes extra
+  61:.\main.c      **** * power through the pins. To prevent the leakage of power, the pins have been set 
+  62:.\main.c      **** * to GPIO. With this setting, the kit can still be acquired by PSoC Creator or
+  63:.\main.c      **** * PSoC Programmer software tools for programming, but the project cannot be 
+  64:.\main.c      **** * externally debugged. To re-enable debugging, go to PSoC_4_BLE_CapSense.cydwr from
+  65:.\main.c      **** * Workspace Explorer, go to Systems tab, and set the Debug Select option to 'SWD'.
+  66:.\main.c      **** * Build and program this project to enable external Debugging.
+  67:.\main.c      **** *
+  68:.\main.c      **** * Refer to BLE Pioneer Kit user guide for details.
+  69:.\main.c      **** *******************************************************************************
+  70:.\main.c      **** * Hardware connection required for testing -
+  71:.\main.c      **** * PROX pin 		- P2[0] (requires an external wire-loop connection to PROX sensor)
+  72:.\main.c      **** * Cmod pin		- P4[0] (hard-wired in the PSoC 4 BLE Module)
+  73:.\main.c      **** * User Button	- P2[7] (hard-wired on BLE Pioneer Kit)
+  74:.\main.c      **** * Status LED	- P3[7] (hard-wired on BLE Pioneer Kit)
+  75:.\main.c      **** ******************************************************************************/
+  76:.\main.c      **** #include <main.h>
+  77:.\main.c      **** 
+  78:.\main.c      **** /*'deviceConnected' flag is used by application to know whether a Central device  
+  79:.\main.c      **** * has been connected. This is updated in BLE event callback */
+  80:.\main.c      **** extern uint8 deviceConnected;
+  81:.\main.c      **** 
+  82:.\main.c      **** /*'startNotification' flag is set when the central device writes to CCC (Client  
+  83:.\main.c      **** * Characteristic Configuration) of the CapSense proximity characteristic to 
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 3
+
+
+  84:.\main.c      **** * enable notifications */
+  85:.\main.c      **** extern uint8 startNotification;	
+  86:.\main.c      **** 
+  87:.\main.c      **** /* 'restartAdvertisement' flag is used to restart advertisement */
+  88:.\main.c      **** extern uint8 restartAdvertisement;
+  89:.\main.c      **** 
+  90:.\main.c      **** /* 'initializeCapSenseBaseline' flag is used to call the function once that initializes 
+  91:.\main.c      **** * all CapSense baseline. The baseline is initialized when the first advertisement 
+  92:.\main.c      **** * is started. This is done so that any external disturbance while powering the kit does 
+  93:.\main.c      **** * not infliuence the baseline value, that may cause wrong readings. */
+  94:.\main.c      **** uint8 initializeCapSenseBaseline = TRUE;
+  95:.\main.c      **** 
+  96:.\main.c      **** /*******************************************************************************
+  97:.\main.c      **** * Function Name: main
+  98:.\main.c      **** ********************************************************************************
+  99:.\main.c      **** * Summary:
+ 100:.\main.c      **** *        System entrance point. This calls the BLE routine functions as well as
+ 101:.\main.c      **** * function for handling CapSense Proximity changes
+ 102:.\main.c      **** *
+ 103:.\main.c      **** * Parameters:
+ 104:.\main.c      **** *  void
+ 105:.\main.c      **** *
+ 106:.\main.c      **** * Return:
+ 107:.\main.c      **** *  int
+ 108:.\main.c      **** *
+ 109:.\main.c      **** 
+ 110:.\main.c      **** *******************************************************************************/
+ 111:.\main.c      **** int main()
+ 112:.\main.c      **** {
+  32              		.loc 1 112 0
+  33              		.cfi_startproc
+  34 0000 80B5     		push	{r7, lr}
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 7, -8
+  37              		.cfi_offset 14, -4
+  38 0002 00AF     		add	r7, sp, #0
+  39              		.cfi_def_cfa_register 7
+ 113:.\main.c      ****     /* This function will initialize the system resources such as BLE and CapSense */
+ 114:.\main.c      **** 	InitializeSystem();
+  40              		.loc 1 114 0
+  41 0004 FFF7FEFF 		bl	InitializeSystem
+  42              	.L5:
+ 115:.\main.c      **** 	
+ 116:.\main.c      ****     for(;;)
+ 117:.\main.c      ****     {
+ 118:.\main.c      **** 		/*Process Event callback to handle BLE events. The events generated and 
+ 119:.\main.c      **** 		* used for this application are inside the 'CustomEventHandler' routine*/
+ 120:.\main.c      **** 		CyBle_ProcessEvents();
+  43              		.loc 1 120 0
+  44 0008 FFF7FEFF 		bl	CyBle_ProcessEvents
+ 121:.\main.c      **** 		
+ 122:.\main.c      **** 		/* Function to handle LED status depending on BLE state */
+ 123:.\main.c      **** 		HandleStatusLED();
+  45              		.loc 1 123 0
+  46 000c FFF7FEFF 		bl	HandleStatusLED
+ 124:.\main.c      **** 		
+ 125:.\main.c      **** 		/* Handle proximity data and CCCD value update only if BLE device is connected */
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 4
+
+
+ 126:.\main.c      **** 		if(TRUE == deviceConnected) 
+  47              		.loc 1 126 0
+  48 0010 114B     		ldr	r3, .L6
+  49 0012 1B78     		ldrb	r3, [r3]
+  50 0014 012B     		cmp	r3, #1
+  51 0016 12D1     		bne	.L2
+ 127:.\main.c      **** 		{	
+ 128:.\main.c      **** 			/* When the Client Characteristic Configuration descriptor (CCCD) is written
+ 129:.\main.c      **** 			* by Central device for enabling/disabling notifications, then the same
+ 130:.\main.c      **** 			* descriptor value has to be explicitly updated in application so that
+ 131:.\main.c      **** 			* it reflects the correct value when the descriptor is read */
+ 132:.\main.c      **** 			UpdateNotificationCCCD();
+  52              		.loc 1 132 0
+  53 0018 FFF7FEFF 		bl	UpdateNotificationCCCD
+ 133:.\main.c      **** 			
+ 134:.\main.c      **** 			/* If CapSense Initialize Baseline API has not been called yet, call the
+ 135:.\main.c      **** 			* API and reset the flag. */
+ 136:.\main.c      **** 			if(initializeCapSenseBaseline)
+  54              		.loc 1 136 0
+  55 001c 0F4B     		ldr	r3, .L6+4
+  56 001e 1B78     		ldrb	r3, [r3]
+  57 0020 002B     		cmp	r3, #0
+  58 0022 04D0     		beq	.L3
+ 137:.\main.c      **** 			{
+ 138:.\main.c      **** 				/* Reset 'initializeCapSenseBaseline' flag*/
+ 139:.\main.c      **** 				initializeCapSenseBaseline = FALSE;
+  59              		.loc 1 139 0
+  60 0024 0D4B     		ldr	r3, .L6+4
+  61 0026 0022     		mov	r2, #0
+  62 0028 1A70     		strb	r2, [r3]
+ 140:.\main.c      **** 				
+ 141:.\main.c      **** 				/* Initialize all CapSense Baseline */
+ 142:.\main.c      **** 				CapSense_InitializeAllBaselines();
+  63              		.loc 1 142 0
+  64 002a FFF7FEFF 		bl	CapSense_InitializeAllBaselines
+  65              	.L3:
+ 143:.\main.c      **** 			}
+ 144:.\main.c      **** 			
+ 145:.\main.c      **** 			/* Send proximity data when notifications are enabled */
+ 146:.\main.c      **** 			if(startNotification & CCCD_NTF_BIT_MASK)
+  66              		.loc 1 146 0
+  67 002e 0C4B     		ldr	r3, .L6+8
+  68 0030 1B78     		ldrb	r3, [r3]
+  69 0032 1A1C     		mov	r2, r3
+  70 0034 0123     		mov	r3, #1
+  71 0036 1340     		and	r3, r2
+  72 0038 01D0     		beq	.L2
+ 147:.\main.c      **** 			{
+ 148:.\main.c      **** 				/*Check for CapSense proximity change and report to BLE central device*/
+ 149:.\main.c      **** 				HandleCapSenseProximity();
+  73              		.loc 1 149 0
+  74 003a FFF7FEFF 		bl	HandleCapSenseProximity
+  75              	.L2:
+ 150:.\main.c      **** 			}
+ 151:.\main.c      **** 		}
+ 152:.\main.c      **** 
+ 153:.\main.c      **** 		if(restartAdvertisement)
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 5
+
+
+  76              		.loc 1 153 0
+  77 003e 094B     		ldr	r3, .L6+12
+  78 0040 1B78     		ldrb	r3, [r3]
+  79 0042 002B     		cmp	r3, #0
+  80 0044 06D0     		beq	.L4
+ 154:.\main.c      **** 		{
+ 155:.\main.c      **** 			/* Reset 'restartAdvertisement' flag*/
+ 156:.\main.c      **** 			restartAdvertisement = FALSE;
+  81              		.loc 1 156 0
+  82 0046 074B     		ldr	r3, .L6+12
+  83 0048 0022     		mov	r2, #0
+  84 004a 1A70     		strb	r2, [r3]
+ 157:.\main.c      **** 			
+ 158:.\main.c      **** 			/* Start Advertisement and enter Discoverable mode*/
+ 159:.\main.c      **** 			CyBle_GappStartAdvertisement(CYBLE_ADVERTISING_FAST);	
+  85              		.loc 1 159 0
+  86 004c 0020     		mov	r0, #0
+  87 004e FFF7FEFF 		bl	CyBle_GappStartAdvertisement
+ 160:.\main.c      **** 		}
+ 161:.\main.c      ****     }	/* This is end of for(;;) */
+  88              		.loc 1 161 0
+  89 0052 D9E7     		b	.L5
+  90              	.L4:
+  91 0054 D8E7     		b	.L5
+  92              	.L7:
+  93 0056 C046     		.align	2
+  94              	.L6:
+  95 0058 00000000 		.word	deviceConnected
+  96 005c 00000000 		.word	initializeCapSenseBaseline
+  97 0060 00000000 		.word	startNotification
+  98 0064 00000000 		.word	restartAdvertisement
+  99              		.cfi_endproc
+ 100              	.LFE35:
+ 101              		.size	main, .-main
+ 102              		.section	.text.InitializeSystem,"ax",%progbits
+ 103              		.align	2
+ 104              		.global	InitializeSystem
+ 105              		.code	16
+ 106              		.thumb_func
+ 107              		.type	InitializeSystem, %function
+ 108              	InitializeSystem:
+ 109              	.LFB36:
+ 162:.\main.c      **** }
+ 163:.\main.c      **** 
+ 164:.\main.c      **** /*******************************************************************************
+ 165:.\main.c      **** * Function Name: InitializeSystem
+ 166:.\main.c      **** ********************************************************************************
+ 167:.\main.c      **** * Summary:
+ 168:.\main.c      **** *        Starts the components and initializes CapSense baselines
+ 169:.\main.c      **** *
+ 170:.\main.c      **** * Parameters:
+ 171:.\main.c      **** *  void
+ 172:.\main.c      **** *
+ 173:.\main.c      **** * Return:
+ 174:.\main.c      **** *  void
+ 175:.\main.c      **** *
+ 176:.\main.c      **** 
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 6
+
+
+ 177:.\main.c      **** *******************************************************************************/
+ 178:.\main.c      **** void InitializeSystem(void)
+ 179:.\main.c      **** {
+ 110              		.loc 1 179 0
+ 111              		.cfi_startproc
+ 112 0000 80B5     		push	{r7, lr}
+ 113              		.cfi_def_cfa_offset 8
+ 114              		.cfi_offset 7, -8
+ 115              		.cfi_offset 14, -4
+ 116 0002 00AF     		add	r7, sp, #0
+ 117              		.cfi_def_cfa_register 7
+ 180:.\main.c      **** 	/* Enable global interrupt mask */
+ 181:.\main.c      **** 	CyGlobalIntEnable;
+ 118              		.loc 1 181 0
+ 119              	@ 181 ".\main.c" 1
+ 120 0004 62B6     		CPSIE   i
+ 121              	@ 0 "" 2
+ 182:.\main.c      **** 
+ 183:.\main.c      **** 	/* Start BLE component and register the CustomEventHandler function. This 
+ 184:.\main.c      **** 	* function exposes the events from BLE component for application use */
+ 185:.\main.c      **** 	CyBle_Start(CustomEventHandler);					
+ 122              		.loc 1 185 0
+ 123              		.code	16
+ 124 0006 074B     		ldr	r3, .L9
+ 125 0008 181C     		mov	r0, r3
+ 126 000a FFF7FEFF 		bl	CyBle_Start
+ 186:.\main.c      **** 	
+ 187:.\main.c      **** 	/* Set drive mode of the status LED pin to Strong*/
+ 188:.\main.c      **** 	Status_LED_SetDriveMode(Status_LED_DM_STRONG);	
+ 127              		.loc 1 188 0
+ 128 000e 0620     		mov	r0, #6
+ 129 0010 FFF7FEFF 		bl	Status_LED_SetDriveMode
+ 189:.\main.c      **** 	
+ 190:.\main.c      **** 	#ifdef CAPSENSE_ENABLED
+ 191:.\main.c      **** 	/* Enable the proximity widget explicitly and start CapSense component. 
+ 192:.\main.c      **** 	* Initialization of the baseline is done when the first connection 
+ 193:.\main.c      **** 	* happens  */
+ 194:.\main.c      **** 	CapSense_EnableWidget(CapSense_PROXIMITYSENSOR0__PROX);
+ 130              		.loc 1 194 0
+ 131 0014 0020     		mov	r0, #0
+ 132 0016 FFF7FEFF 		bl	CapSense_EnableWidget
+ 195:.\main.c      **** 	CapSense_Start();
+ 133              		.loc 1 195 0
+ 134 001a FFF7FEFF 		bl	CapSense_Start
+ 196:.\main.c      **** 	#endif
+ 197:.\main.c      **** 		
+ 198:.\main.c      **** }
+ 135              		.loc 1 198 0
+ 136 001e BD46     		mov	sp, r7
+ 137              		@ sp needed
+ 138 0020 80BD     		pop	{r7, pc}
+ 139              	.L10:
+ 140 0022 C046     		.align	2
+ 141              	.L9:
+ 142 0024 00000000 		.word	CustomEventHandler
+ 143              		.cfi_endproc
+ 144              	.LFE36:
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 7
+
+
+ 145              		.size	InitializeSystem, .-InitializeSystem
+ 146              		.section	.text.HandleCapSenseProximity,"ax",%progbits
+ 147              		.align	2
+ 148              		.global	HandleCapSenseProximity
+ 149              		.code	16
+ 150              		.thumb_func
+ 151              		.type	HandleCapSenseProximity, %function
+ 152              	HandleCapSenseProximity:
+ 153              	.LFB37:
+ 199:.\main.c      **** 
+ 200:.\main.c      **** /*******************************************************************************
+ 201:.\main.c      **** * Function Name: HandleCapSenseProximity
+ 202:.\main.c      **** ********************************************************************************
+ 203:.\main.c      **** * Summary:
+ 204:.\main.c      **** *       Read the proximity data from the sensor and update the BLE
+ 205:.\main.c      **** *		custom notification value.
+ 206:.\main.c      **** *
+ 207:.\main.c      **** * Parameters:
+ 208:.\main.c      **** *  void
+ 209:.\main.c      **** *
+ 210:.\main.c      **** * Return:
+ 211:.\main.c      **** *  void
+ 212:.\main.c      **** *
+ 213:.\main.c      **** *******************************************************************************/
+ 214:.\main.c      **** void HandleCapSenseProximity(void)
+ 215:.\main.c      **** {
+ 154              		.loc 1 215 0
+ 155              		.cfi_startproc
+ 156 0000 90B5     		push	{r4, r7, lr}
+ 157              		.cfi_def_cfa_offset 12
+ 158              		.cfi_offset 4, -12
+ 159              		.cfi_offset 7, -8
+ 160              		.cfi_offset 14, -4
+ 161 0002 83B0     		sub	sp, sp, #12
+ 162              		.cfi_def_cfa_offset 24
+ 163 0004 00AF     		add	r7, sp, #0
+ 164              		.cfi_def_cfa_register 7
+ 216:.\main.c      **** 	#ifdef CAPSENSE_ENABLED
+ 217:.\main.c      **** 	/* Static variable used as counter for reading the new proximity value */
+ 218:.\main.c      **** 	static uint16 proxCounter = TRUE;			
+ 219:.\main.c      **** 				
+ 220:.\main.c      **** 	/* 'proximityValue' stores the proximity value read from CapSense component */
+ 221:.\main.c      **** 	uint8 proximityValue;	
+ 222:.\main.c      **** 		
+ 223:.\main.c      **** 	/* Check if proxCounter has reached its counting value */
+ 224:.\main.c      **** 	if(FALSE == (--proxCounter))			
+ 165              		.loc 1 224 0
+ 166 0006 134B     		ldr	r3, .L14
+ 167 0008 1B88     		ldrh	r3, [r3]
+ 168 000a 013B     		sub	r3, r3, #1
+ 169 000c 9AB2     		uxth	r2, r3
+ 170 000e 114B     		ldr	r3, .L14
+ 171 0010 1A80     		strh	r2, [r3]
+ 172 0012 104B     		ldr	r3, .L14
+ 173 0014 1B88     		ldrh	r3, [r3]
+ 174 0016 002B     		cmp	r3, #0
+ 175 0018 18D1     		bne	.L11
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 8
+
+
+ 225:.\main.c      **** 	{
+ 226:.\main.c      **** 		/* Set 'proxCounter' to the PROX_COUNTER_VALUE. This counter prevents sending 
+ 227:.\main.c      **** 		   of large number of CapSense proximity data to BLE Central device */
+ 228:.\main.c      **** 		proxCounter = PROX_COUNTER_VALUE;
+ 176              		.loc 1 228 0
+ 177 001a 0E4B     		ldr	r3, .L14
+ 178 001c 0522     		mov	r2, #5
+ 179 001e 1A80     		strh	r2, [r3]
+ 229:.\main.c      **** 
+ 230:.\main.c      **** 		/* Scan the Proximity Widget */
+ 231:.\main.c      **** 		CapSense_ScanWidget(CapSense_PROXIMITYSENSOR0__PROX);				
+ 180              		.loc 1 231 0
+ 181 0020 0020     		mov	r0, #0
+ 182 0022 FFF7FEFF 		bl	CapSense_ScanWidget
+ 232:.\main.c      **** 		
+ 233:.\main.c      **** 		/* Wait for CapSense scanning to be complete. This could take about 5 ms */
+ 234:.\main.c      **** 		while(CapSense_IsBusy())
+ 183              		.loc 1 234 0
+ 184 0026 C046     		mov	r8, r8
+ 185              	.L13:
+ 186              		.loc 1 234 0 is_stmt 0 discriminator 1
+ 187 0028 FFF7FEFF 		bl	CapSense_IsBusy
+ 188 002c 031C     		mov	r3, r0
+ 189 002e 002B     		cmp	r3, #0
+ 190 0030 FAD1     		bne	.L13
+ 235:.\main.c      **** 		{
+ 236:.\main.c      **** 		}
+ 237:.\main.c      **** 		
+ 238:.\main.c      **** 		/* Update CapSense Baseline */
+ 239:.\main.c      **** 		CapSense_UpdateEnabledBaselines();			
+ 191              		.loc 1 239 0 is_stmt 1
+ 192 0032 FFF7FEFF 		bl	CapSense_UpdateEnabledBaselines
+ 240:.\main.c      **** 
+ 241:.\main.c      **** 		/* Get the Diffcount between proximity raw data and baseline */
+ 242:.\main.c      **** 		proximityValue = CapSense_GetDiffCountData(CapSense_PROXIMITYSENSOR0__PROX);
+ 193              		.loc 1 242 0
+ 194 0036 FC1D     		add	r4, r7, #7
+ 195 0038 0020     		mov	r0, #0
+ 196 003a FFF7FEFF 		bl	CapSense_GetDiffCountData
+ 197 003e 031C     		mov	r3, r0
+ 198 0040 2370     		strb	r3, [r4]
+ 243:.\main.c      **** 		
+ 244:.\main.c      **** 		/* Send the proximity data to BLE central device by notifications*/
+ 245:.\main.c      **** 		SendDataOverCapSenseNotification(proximityValue);
+ 199              		.loc 1 245 0
+ 200 0042 FB1D     		add	r3, r7, #7
+ 201 0044 1B78     		ldrb	r3, [r3]
+ 202 0046 181C     		mov	r0, r3
+ 203 0048 FFF7FEFF 		bl	SendDataOverCapSenseNotification
+ 204              	.L11:
+ 246:.\main.c      **** 			
+ 247:.\main.c      **** 	}
+ 248:.\main.c      **** 	#endif
+ 249:.\main.c      **** }
+ 205              		.loc 1 249 0
+ 206 004c BD46     		mov	sp, r7
+ 207 004e 03B0     		add	sp, sp, #12
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 9
+
+
+ 208              		@ sp needed
+ 209 0050 90BD     		pop	{r4, r7, pc}
+ 210              	.L15:
+ 211 0052 C046     		.align	2
+ 212              	.L14:
+ 213 0054 02000000 		.word	proxCounter.6574
+ 214              		.cfi_endproc
+ 215              	.LFE37:
+ 216              		.size	HandleCapSenseProximity, .-HandleCapSenseProximity
+ 217              		.data
+ 218 0001 00       		.align	1
+ 219              		.type	proxCounter.6574, %object
+ 220              		.size	proxCounter.6574, 2
+ 221              	proxCounter.6574:
+ 222 0002 0100     		.short	1
+ 223              		.text
+ 224              	.Letext0:
+ 225              		.file 2 "Generated_Source\\PSoC4/cytypes.h"
+ 226              		.file 3 "Generated_Source\\PSoC4/BLE_Stack.h"
+ 227              		.section	.debug_info,"",%progbits
+ 228              	.Ldebug_info0:
+ 229 0000 97020000 		.4byte	0x297
+ 230 0004 0400     		.2byte	0x4
+ 231 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 232 000a 04       		.byte	0x4
+ 233 000b 01       		.uleb128 0x1
+ 234 000c 53080000 		.4byte	.LASF77
+ 235 0010 01       		.byte	0x1
+ 236 0011 27010000 		.4byte	.LASF78
+ 237 0015 C8060000 		.4byte	.LASF79
+ 238 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 239 001d 00000000 		.4byte	0
+ 240 0021 00000000 		.4byte	.Ldebug_line0
+ 241 0025 02       		.uleb128 0x2
+ 242 0026 01       		.byte	0x1
+ 243 0027 06       		.byte	0x6
+ 244 0028 F2030000 		.4byte	.LASF0
+ 245 002c 02       		.uleb128 0x2
+ 246 002d 01       		.byte	0x1
+ 247 002e 08       		.byte	0x8
+ 248 002f A7030000 		.4byte	.LASF1
+ 249 0033 02       		.uleb128 0x2
+ 250 0034 02       		.byte	0x2
+ 251 0035 05       		.byte	0x5
+ 252 0036 69000000 		.4byte	.LASF2
+ 253 003a 02       		.uleb128 0x2
+ 254 003b 02       		.byte	0x2
+ 255 003c 07       		.byte	0x7
+ 256 003d EA040000 		.4byte	.LASF3
+ 257 0041 02       		.uleb128 0x2
+ 258 0042 04       		.byte	0x4
+ 259 0043 05       		.byte	0x5
+ 260 0044 6F020000 		.4byte	.LASF4
+ 261 0048 02       		.uleb128 0x2
+ 262 0049 04       		.byte	0x4
+ 263 004a 07       		.byte	0x7
+ 264 004b 83040000 		.4byte	.LASF5
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 10
+
+
+ 265 004f 02       		.uleb128 0x2
+ 266 0050 08       		.byte	0x8
+ 267 0051 05       		.byte	0x5
+ 268 0052 4A020000 		.4byte	.LASF6
+ 269 0056 02       		.uleb128 0x2
+ 270 0057 08       		.byte	0x8
+ 271 0058 07       		.byte	0x7
+ 272 0059 58020000 		.4byte	.LASF7
+ 273 005d 03       		.uleb128 0x3
+ 274 005e 04       		.byte	0x4
+ 275 005f 05       		.byte	0x5
+ 276 0060 696E7400 		.ascii	"int\000"
+ 277 0064 02       		.uleb128 0x2
+ 278 0065 04       		.byte	0x4
+ 279 0066 07       		.byte	0x7
+ 280 0067 5B040000 		.4byte	.LASF8
+ 281 006b 04       		.uleb128 0x4
+ 282 006c 6F030000 		.4byte	.LASF9
+ 283 0070 02       		.byte	0x2
+ 284 0071 A1       		.byte	0xa1
+ 285 0072 2C000000 		.4byte	0x2c
+ 286 0076 04       		.uleb128 0x4
+ 287 0077 20010000 		.4byte	.LASF10
+ 288 007b 02       		.byte	0x2
+ 289 007c A2       		.byte	0xa2
+ 290 007d 3A000000 		.4byte	0x3a
+ 291 0081 02       		.uleb128 0x2
+ 292 0082 04       		.byte	0x4
+ 293 0083 04       		.byte	0x4
+ 294 0084 24000000 		.4byte	.LASF11
+ 295 0088 02       		.uleb128 0x2
+ 296 0089 08       		.byte	0x8
+ 297 008a 04       		.byte	0x4
+ 298 008b 04060000 		.4byte	.LASF12
+ 299 008f 02       		.uleb128 0x2
+ 300 0090 01       		.byte	0x1
+ 301 0091 08       		.byte	0x8
+ 302 0092 46050000 		.4byte	.LASF13
+ 303 0096 02       		.uleb128 0x2
+ 304 0097 04       		.byte	0x4
+ 305 0098 07       		.byte	0x7
+ 306 0099 AB000000 		.4byte	.LASF14
+ 307 009d 05       		.uleb128 0x5
+ 308 009e 01       		.byte	0x1
+ 309 009f 03       		.byte	0x3
+ 310 00a0 52       		.byte	0x52
+ 311 00a1 0D020000 		.4byte	0x20d
+ 312 00a5 06       		.uleb128 0x6
+ 313 00a6 A6010000 		.4byte	.LASF15
+ 314 00aa 00       		.sleb128 0
+ 315 00ab 06       		.uleb128 0x6
+ 316 00ac EF000000 		.4byte	.LASF16
+ 317 00b0 01       		.sleb128 1
+ 318 00b1 06       		.uleb128 0x6
+ 319 00b2 DC070000 		.4byte	.LASF17
+ 320 00b6 02       		.sleb128 2
+ 321 00b7 06       		.uleb128 0x6
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 11
+
+
+ 322 00b8 46060000 		.4byte	.LASF18
+ 323 00bc 03       		.sleb128 3
+ 324 00bd 06       		.uleb128 0x6
+ 325 00be B9000000 		.4byte	.LASF19
+ 326 00c2 04       		.sleb128 4
+ 327 00c3 06       		.uleb128 0x6
+ 328 00c4 01030000 		.4byte	.LASF20
+ 329 00c8 05       		.sleb128 5
+ 330 00c9 06       		.uleb128 0x6
+ 331 00ca A4060000 		.4byte	.LASF21
+ 332 00ce 20       		.sleb128 32
+ 333 00cf 06       		.uleb128 0x6
+ 334 00d0 95040000 		.4byte	.LASF22
+ 335 00d4 21       		.sleb128 33
+ 336 00d5 06       		.uleb128 0x6
+ 337 00d6 00000000 		.4byte	.LASF23
+ 338 00da 22       		.sleb128 34
+ 339 00db 06       		.uleb128 0x6
+ 340 00dc 1D030000 		.4byte	.LASF24
+ 341 00e0 23       		.sleb128 35
+ 342 00e1 06       		.uleb128 0x6
+ 343 00e2 3F040000 		.4byte	.LASF25
+ 344 00e6 24       		.sleb128 36
+ 345 00e7 06       		.uleb128 0x6
+ 346 00e8 73000000 		.4byte	.LASF26
+ 347 00ec 25       		.sleb128 37
+ 348 00ed 06       		.uleb128 0x6
+ 349 00ee B8020000 		.4byte	.LASF27
+ 350 00f2 26       		.sleb128 38
+ 351 00f3 06       		.uleb128 0x6
+ 352 00f4 99020000 		.4byte	.LASF28
+ 353 00f8 27       		.sleb128 39
+ 354 00f9 06       		.uleb128 0x6
+ 355 00fa 0D080000 		.4byte	.LASF29
+ 356 00fe 28       		.sleb128 40
+ 357 00ff 06       		.uleb128 0x6
+ 358 0100 CD040000 		.4byte	.LASF30
+ 359 0104 29       		.sleb128 41
+ 360 0105 06       		.uleb128 0x6
+ 361 0106 1D050000 		.4byte	.LASF31
+ 362 010a 2A       		.sleb128 42
+ 363 010b 06       		.uleb128 0x6
+ 364 010c A4050000 		.4byte	.LASF32
+ 365 0110 2B       		.sleb128 43
+ 366 0111 06       		.uleb128 0x6
+ 367 0112 42010000 		.4byte	.LASF33
+ 368 0116 2C       		.sleb128 44
+ 369 0117 06       		.uleb128 0x6
+ 370 0118 3F000000 		.4byte	.LASF34
+ 371 011c C000     		.sleb128 64
+ 372 011e 06       		.uleb128 0x6
+ 373 011f 68040000 		.4byte	.LASF35
+ 374 0123 C100     		.sleb128 65
+ 375 0125 06       		.uleb128 0x6
+ 376 0126 8D000000 		.4byte	.LASF36
+ 377 012a C200     		.sleb128 66
+ 378 012c 06       		.uleb128 0x6
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 12
+
+
+ 379 012d 02010000 		.4byte	.LASF37
+ 380 0131 C300     		.sleb128 67
+ 381 0133 06       		.uleb128 0x6
+ 382 0134 9A070000 		.4byte	.LASF38
+ 383 0138 C400     		.sleb128 68
+ 384 013a 06       		.uleb128 0x6
+ 385 013b 55070000 		.4byte	.LASF39
+ 386 013f C500     		.sleb128 69
+ 387 0141 06       		.uleb128 0x6
+ 388 0142 CE000000 		.4byte	.LASF40
+ 389 0146 C600     		.sleb128 70
+ 390 0148 06       		.uleb128 0x6
+ 391 0149 D4030000 		.4byte	.LASF41
+ 392 014d C700     		.sleb128 71
+ 393 014f 06       		.uleb128 0x6
+ 394 0150 18040000 		.4byte	.LASF42
+ 395 0154 C800     		.sleb128 72
+ 396 0156 06       		.uleb128 0x6
+ 397 0157 17020000 		.4byte	.LASF43
+ 398 015b C900     		.sleb128 73
+ 399 015d 06       		.uleb128 0x6
+ 400 015e 67050000 		.4byte	.LASF44
+ 401 0162 CA00     		.sleb128 74
+ 402 0164 06       		.uleb128 0x6
+ 403 0165 66010000 		.4byte	.LASF45
+ 404 0169 CB00     		.sleb128 75
+ 405 016b 06       		.uleb128 0x6
+ 406 016c FE030000 		.4byte	.LASF46
+ 407 0170 CC00     		.sleb128 76
+ 408 0172 06       		.uleb128 0x6
+ 409 0173 30020000 		.4byte	.LASF47
+ 410 0177 CD00     		.sleb128 77
+ 411 0179 06       		.uleb128 0x6
+ 412 017a 7C070000 		.4byte	.LASF48
+ 413 017e CE00     		.sleb128 78
+ 414 0180 06       		.uleb128 0x6
+ 415 0181 B5030000 		.4byte	.LASF49
+ 416 0185 CF00     		.sleb128 79
+ 417 0187 06       		.uleb128 0x6
+ 418 0188 EE070000 		.4byte	.LASF50
+ 419 018c D000     		.sleb128 80
+ 420 018e 06       		.uleb128 0x6
+ 421 018f 85050000 		.4byte	.LASF51
+ 422 0193 D100     		.sleb128 81
+ 423 0195 06       		.uleb128 0x6
+ 424 0196 E0020000 		.4byte	.LASF52
+ 425 019a D200     		.sleb128 82
+ 426 019c 06       		.uleb128 0x6
+ 427 019d 78020000 		.4byte	.LASF53
+ 428 01a1 D300     		.sleb128 83
+ 429 01a3 06       		.uleb128 0x6
+ 430 01a4 85010000 		.4byte	.LASF54
+ 431 01a8 D400     		.sleb128 84
+ 432 01aa 06       		.uleb128 0x6
+ 433 01ab 2F080000 		.4byte	.LASF55
+ 434 01af D500     		.sleb128 85
+ 435 01b1 06       		.uleb128 0x6
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 13
+
+
+ 436 01b2 81030000 		.4byte	.LASF56
+ 437 01b6 F000     		.sleb128 112
+ 438 01b8 06       		.uleb128 0x6
+ 439 01b9 7E060000 		.4byte	.LASF57
+ 440 01bd F100     		.sleb128 113
+ 441 01bf 06       		.uleb128 0x6
+ 442 01c0 4B050000 		.4byte	.LASF58
+ 443 01c4 F200     		.sleb128 114
+ 444 01c6 06       		.uleb128 0x6
+ 445 01c7 BD010000 		.4byte	.LASF59
+ 446 01cb F300     		.sleb128 115
+ 447 01cd 06       		.uleb128 0x6
+ 448 01ce 43030000 		.4byte	.LASF60
+ 449 01d2 F400     		.sleb128 116
+ 450 01d4 06       		.uleb128 0x6
+ 451 01d5 AC040000 		.4byte	.LASF61
+ 452 01d9 F500     		.sleb128 117
+ 453 01db 06       		.uleb128 0x6
+ 454 01dc DB010000 		.4byte	.LASF62
+ 455 01e0 F600     		.sleb128 118
+ 456 01e2 06       		.uleb128 0x6
+ 457 01e3 5F060000 		.4byte	.LASF63
+ 458 01e7 F700     		.sleb128 119
+ 459 01e9 06       		.uleb128 0x6
+ 460 01ea E1050000 		.4byte	.LASF64
+ 461 01ee F800     		.sleb128 120
+ 462 01f0 06       		.uleb128 0x6
+ 463 01f1 0B060000 		.4byte	.LASF65
+ 464 01f5 F900     		.sleb128 121
+ 465 01f7 06       		.uleb128 0x6
+ 466 01f8 B8070000 		.4byte	.LASF66
+ 467 01fc FA00     		.sleb128 122
+ 468 01fe 06       		.uleb128 0x6
+ 469 01ff C3050000 		.4byte	.LASF67
+ 470 0203 FA01     		.sleb128 250
+ 471 0205 06       		.uleb128 0x6
+ 472 0206 61030000 		.4byte	.LASF68
+ 473 020a FF01     		.sleb128 255
+ 474 020c 00       		.byte	0
+ 475 020d 07       		.uleb128 0x7
+ 476 020e B4000000 		.4byte	.LASF69
+ 477 0212 01       		.byte	0x1
+ 478 0213 6F       		.byte	0x6f
+ 479 0214 5D000000 		.4byte	0x5d
+ 480 0218 00000000 		.4byte	.LFB35
+ 481 021c 68000000 		.4byte	.LFE35-.LFB35
+ 482 0220 01       		.uleb128 0x1
+ 483 0221 9C       		.byte	0x9c
+ 484 0222 08       		.uleb128 0x8
+ 485 0223 FD040000 		.4byte	.LASF70
+ 486 0227 01       		.byte	0x1
+ 487 0228 B2       		.byte	0xb2
+ 488 0229 00000000 		.4byte	.LFB36
+ 489 022d 28000000 		.4byte	.LFE36-.LFB36
+ 490 0231 01       		.uleb128 0x1
+ 491 0232 9C       		.byte	0x9c
+ 492 0233 09       		.uleb128 0x9
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 14
+
+
+ 493 0234 2E060000 		.4byte	.LASF80
+ 494 0238 01       		.byte	0x1
+ 495 0239 D6       		.byte	0xd6
+ 496 023a 00000000 		.4byte	.LFB37
+ 497 023e 58000000 		.4byte	.LFE37-.LFB37
+ 498 0242 01       		.uleb128 0x1
+ 499 0243 9C       		.byte	0x9c
+ 500 0244 68020000 		.4byte	0x268
+ 501 0248 0A       		.uleb128 0xa
+ 502 0249 75030000 		.4byte	.LASF71
+ 503 024d 01       		.byte	0x1
+ 504 024e DA       		.byte	0xda
+ 505 024f 76000000 		.4byte	0x76
+ 506 0253 05       		.uleb128 0x5
+ 507 0254 03       		.byte	0x3
+ 508 0255 02000000 		.4byte	proxCounter.6574
+ 509 0259 0A       		.uleb128 0xa
+ 510 025a 0E050000 		.4byte	.LASF72
+ 511 025e 01       		.byte	0x1
+ 512 025f DD       		.byte	0xdd
+ 513 0260 6B000000 		.4byte	0x6b
+ 514 0264 02       		.uleb128 0x2
+ 515 0265 91       		.byte	0x91
+ 516 0266 6F       		.sleb128 -17
+ 517 0267 00       		.byte	0
+ 518 0268 0B       		.uleb128 0xb
+ 519 0269 59000000 		.4byte	.LASF73
+ 520 026d 01       		.byte	0x1
+ 521 026e 50       		.byte	0x50
+ 522 026f 6B000000 		.4byte	0x6b
+ 523 0273 0B       		.uleb128 0xb
+ 524 0274 30010000 		.4byte	.LASF74
+ 525 0278 01       		.byte	0x1
+ 526 0279 55       		.byte	0x55
+ 527 027a 6B000000 		.4byte	0x6b
+ 528 027e 0B       		.uleb128 0xb
+ 529 027f 2A000000 		.4byte	.LASF75
+ 530 0283 01       		.byte	0x1
+ 531 0284 58       		.byte	0x58
+ 532 0285 6B000000 		.4byte	0x6b
+ 533 0289 0C       		.uleb128 0xc
+ 534 028a FC010000 		.4byte	.LASF76
+ 535 028e 01       		.byte	0x1
+ 536 028f 5E       		.byte	0x5e
+ 537 0290 6B000000 		.4byte	0x6b
+ 538 0294 05       		.uleb128 0x5
+ 539 0295 03       		.byte	0x3
+ 540 0296 00000000 		.4byte	initializeCapSenseBaseline
+ 541 029a 00       		.byte	0
+ 542              		.section	.debug_abbrev,"",%progbits
+ 543              	.Ldebug_abbrev0:
+ 544 0000 01       		.uleb128 0x1
+ 545 0001 11       		.uleb128 0x11
+ 546 0002 01       		.byte	0x1
+ 547 0003 25       		.uleb128 0x25
+ 548 0004 0E       		.uleb128 0xe
+ 549 0005 13       		.uleb128 0x13
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 15
+
+
+ 550 0006 0B       		.uleb128 0xb
+ 551 0007 03       		.uleb128 0x3
+ 552 0008 0E       		.uleb128 0xe
+ 553 0009 1B       		.uleb128 0x1b
+ 554 000a 0E       		.uleb128 0xe
+ 555 000b 55       		.uleb128 0x55
+ 556 000c 17       		.uleb128 0x17
+ 557 000d 11       		.uleb128 0x11
+ 558 000e 01       		.uleb128 0x1
+ 559 000f 10       		.uleb128 0x10
+ 560 0010 17       		.uleb128 0x17
+ 561 0011 00       		.byte	0
+ 562 0012 00       		.byte	0
+ 563 0013 02       		.uleb128 0x2
+ 564 0014 24       		.uleb128 0x24
+ 565 0015 00       		.byte	0
+ 566 0016 0B       		.uleb128 0xb
+ 567 0017 0B       		.uleb128 0xb
+ 568 0018 3E       		.uleb128 0x3e
+ 569 0019 0B       		.uleb128 0xb
+ 570 001a 03       		.uleb128 0x3
+ 571 001b 0E       		.uleb128 0xe
+ 572 001c 00       		.byte	0
+ 573 001d 00       		.byte	0
+ 574 001e 03       		.uleb128 0x3
+ 575 001f 24       		.uleb128 0x24
+ 576 0020 00       		.byte	0
+ 577 0021 0B       		.uleb128 0xb
+ 578 0022 0B       		.uleb128 0xb
+ 579 0023 3E       		.uleb128 0x3e
+ 580 0024 0B       		.uleb128 0xb
+ 581 0025 03       		.uleb128 0x3
+ 582 0026 08       		.uleb128 0x8
+ 583 0027 00       		.byte	0
+ 584 0028 00       		.byte	0
+ 585 0029 04       		.uleb128 0x4
+ 586 002a 16       		.uleb128 0x16
+ 587 002b 00       		.byte	0
+ 588 002c 03       		.uleb128 0x3
+ 589 002d 0E       		.uleb128 0xe
+ 590 002e 3A       		.uleb128 0x3a
+ 591 002f 0B       		.uleb128 0xb
+ 592 0030 3B       		.uleb128 0x3b
+ 593 0031 0B       		.uleb128 0xb
+ 594 0032 49       		.uleb128 0x49
+ 595 0033 13       		.uleb128 0x13
+ 596 0034 00       		.byte	0
+ 597 0035 00       		.byte	0
+ 598 0036 05       		.uleb128 0x5
+ 599 0037 04       		.uleb128 0x4
+ 600 0038 01       		.byte	0x1
+ 601 0039 0B       		.uleb128 0xb
+ 602 003a 0B       		.uleb128 0xb
+ 603 003b 3A       		.uleb128 0x3a
+ 604 003c 0B       		.uleb128 0xb
+ 605 003d 3B       		.uleb128 0x3b
+ 606 003e 0B       		.uleb128 0xb
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 16
+
+
+ 607 003f 01       		.uleb128 0x1
+ 608 0040 13       		.uleb128 0x13
+ 609 0041 00       		.byte	0
+ 610 0042 00       		.byte	0
+ 611 0043 06       		.uleb128 0x6
+ 612 0044 28       		.uleb128 0x28
+ 613 0045 00       		.byte	0
+ 614 0046 03       		.uleb128 0x3
+ 615 0047 0E       		.uleb128 0xe
+ 616 0048 1C       		.uleb128 0x1c
+ 617 0049 0D       		.uleb128 0xd
+ 618 004a 00       		.byte	0
+ 619 004b 00       		.byte	0
+ 620 004c 07       		.uleb128 0x7
+ 621 004d 2E       		.uleb128 0x2e
+ 622 004e 00       		.byte	0
+ 623 004f 3F       		.uleb128 0x3f
+ 624 0050 19       		.uleb128 0x19
+ 625 0051 03       		.uleb128 0x3
+ 626 0052 0E       		.uleb128 0xe
+ 627 0053 3A       		.uleb128 0x3a
+ 628 0054 0B       		.uleb128 0xb
+ 629 0055 3B       		.uleb128 0x3b
+ 630 0056 0B       		.uleb128 0xb
+ 631 0057 49       		.uleb128 0x49
+ 632 0058 13       		.uleb128 0x13
+ 633 0059 11       		.uleb128 0x11
+ 634 005a 01       		.uleb128 0x1
+ 635 005b 12       		.uleb128 0x12
+ 636 005c 06       		.uleb128 0x6
+ 637 005d 40       		.uleb128 0x40
+ 638 005e 18       		.uleb128 0x18
+ 639 005f 9642     		.uleb128 0x2116
+ 640 0061 19       		.uleb128 0x19
+ 641 0062 00       		.byte	0
+ 642 0063 00       		.byte	0
+ 643 0064 08       		.uleb128 0x8
+ 644 0065 2E       		.uleb128 0x2e
+ 645 0066 00       		.byte	0
+ 646 0067 3F       		.uleb128 0x3f
+ 647 0068 19       		.uleb128 0x19
+ 648 0069 03       		.uleb128 0x3
+ 649 006a 0E       		.uleb128 0xe
+ 650 006b 3A       		.uleb128 0x3a
+ 651 006c 0B       		.uleb128 0xb
+ 652 006d 3B       		.uleb128 0x3b
+ 653 006e 0B       		.uleb128 0xb
+ 654 006f 27       		.uleb128 0x27
+ 655 0070 19       		.uleb128 0x19
+ 656 0071 11       		.uleb128 0x11
+ 657 0072 01       		.uleb128 0x1
+ 658 0073 12       		.uleb128 0x12
+ 659 0074 06       		.uleb128 0x6
+ 660 0075 40       		.uleb128 0x40
+ 661 0076 18       		.uleb128 0x18
+ 662 0077 9642     		.uleb128 0x2116
+ 663 0079 19       		.uleb128 0x19
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 17
+
+
+ 664 007a 00       		.byte	0
+ 665 007b 00       		.byte	0
+ 666 007c 09       		.uleb128 0x9
+ 667 007d 2E       		.uleb128 0x2e
+ 668 007e 01       		.byte	0x1
+ 669 007f 3F       		.uleb128 0x3f
+ 670 0080 19       		.uleb128 0x19
+ 671 0081 03       		.uleb128 0x3
+ 672 0082 0E       		.uleb128 0xe
+ 673 0083 3A       		.uleb128 0x3a
+ 674 0084 0B       		.uleb128 0xb
+ 675 0085 3B       		.uleb128 0x3b
+ 676 0086 0B       		.uleb128 0xb
+ 677 0087 27       		.uleb128 0x27
+ 678 0088 19       		.uleb128 0x19
+ 679 0089 11       		.uleb128 0x11
+ 680 008a 01       		.uleb128 0x1
+ 681 008b 12       		.uleb128 0x12
+ 682 008c 06       		.uleb128 0x6
+ 683 008d 40       		.uleb128 0x40
+ 684 008e 18       		.uleb128 0x18
+ 685 008f 9642     		.uleb128 0x2116
+ 686 0091 19       		.uleb128 0x19
+ 687 0092 01       		.uleb128 0x1
+ 688 0093 13       		.uleb128 0x13
+ 689 0094 00       		.byte	0
+ 690 0095 00       		.byte	0
+ 691 0096 0A       		.uleb128 0xa
+ 692 0097 34       		.uleb128 0x34
+ 693 0098 00       		.byte	0
+ 694 0099 03       		.uleb128 0x3
+ 695 009a 0E       		.uleb128 0xe
+ 696 009b 3A       		.uleb128 0x3a
+ 697 009c 0B       		.uleb128 0xb
+ 698 009d 3B       		.uleb128 0x3b
+ 699 009e 0B       		.uleb128 0xb
+ 700 009f 49       		.uleb128 0x49
+ 701 00a0 13       		.uleb128 0x13
+ 702 00a1 02       		.uleb128 0x2
+ 703 00a2 18       		.uleb128 0x18
+ 704 00a3 00       		.byte	0
+ 705 00a4 00       		.byte	0
+ 706 00a5 0B       		.uleb128 0xb
+ 707 00a6 34       		.uleb128 0x34
+ 708 00a7 00       		.byte	0
+ 709 00a8 03       		.uleb128 0x3
+ 710 00a9 0E       		.uleb128 0xe
+ 711 00aa 3A       		.uleb128 0x3a
+ 712 00ab 0B       		.uleb128 0xb
+ 713 00ac 3B       		.uleb128 0x3b
+ 714 00ad 0B       		.uleb128 0xb
+ 715 00ae 49       		.uleb128 0x49
+ 716 00af 13       		.uleb128 0x13
+ 717 00b0 3F       		.uleb128 0x3f
+ 718 00b1 19       		.uleb128 0x19
+ 719 00b2 3C       		.uleb128 0x3c
+ 720 00b3 19       		.uleb128 0x19
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 18
+
+
+ 721 00b4 00       		.byte	0
+ 722 00b5 00       		.byte	0
+ 723 00b6 0C       		.uleb128 0xc
+ 724 00b7 34       		.uleb128 0x34
+ 725 00b8 00       		.byte	0
+ 726 00b9 03       		.uleb128 0x3
+ 727 00ba 0E       		.uleb128 0xe
+ 728 00bb 3A       		.uleb128 0x3a
+ 729 00bc 0B       		.uleb128 0xb
+ 730 00bd 3B       		.uleb128 0x3b
+ 731 00be 0B       		.uleb128 0xb
+ 732 00bf 49       		.uleb128 0x49
+ 733 00c0 13       		.uleb128 0x13
+ 734 00c1 3F       		.uleb128 0x3f
+ 735 00c2 19       		.uleb128 0x19
+ 736 00c3 02       		.uleb128 0x2
+ 737 00c4 18       		.uleb128 0x18
+ 738 00c5 00       		.byte	0
+ 739 00c6 00       		.byte	0
+ 740 00c7 00       		.byte	0
+ 741              		.section	.debug_aranges,"",%progbits
+ 742 0000 2C000000 		.4byte	0x2c
+ 743 0004 0200     		.2byte	0x2
+ 744 0006 00000000 		.4byte	.Ldebug_info0
+ 745 000a 04       		.byte	0x4
+ 746 000b 00       		.byte	0
+ 747 000c 0000     		.2byte	0
+ 748 000e 0000     		.2byte	0
+ 749 0010 00000000 		.4byte	.LFB35
+ 750 0014 68000000 		.4byte	.LFE35-.LFB35
+ 751 0018 00000000 		.4byte	.LFB36
+ 752 001c 28000000 		.4byte	.LFE36-.LFB36
+ 753 0020 00000000 		.4byte	.LFB37
+ 754 0024 58000000 		.4byte	.LFE37-.LFB37
+ 755 0028 00000000 		.4byte	0
+ 756 002c 00000000 		.4byte	0
+ 757              		.section	.debug_ranges,"",%progbits
+ 758              	.Ldebug_ranges0:
+ 759 0000 00000000 		.4byte	.LFB35
+ 760 0004 68000000 		.4byte	.LFE35
+ 761 0008 00000000 		.4byte	.LFB36
+ 762 000c 28000000 		.4byte	.LFE36
+ 763 0010 00000000 		.4byte	.LFB37
+ 764 0014 58000000 		.4byte	.LFE37
+ 765 0018 00000000 		.4byte	0
+ 766 001c 00000000 		.4byte	0
+ 767              		.section	.debug_line,"",%progbits
+ 768              	.Ldebug_line0:
+ 769 0000 AD000000 		.section	.debug_str,"MS",%progbits,1
+ 769      02005200 
+ 769      00000201 
+ 769      FB0E0D00 
+ 769      01010101 
+ 770              	.LASF23:
+ 771 0000 4359424C 		.ascii	"CYBLE_EVT_GAP_PASSKEY_ENTRY_REQUEST\000"
+ 771      455F4556 
+ 771      545F4741 
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 19
+
+
+ 771      505F5041 
+ 771      53534B45 
+ 772              	.LASF11:
+ 773 0024 666C6F61 		.ascii	"float\000"
+ 773      7400
+ 774              	.LASF75:
+ 775 002a 72657374 		.ascii	"restartAdvertisement\000"
+ 775      61727441 
+ 775      64766572 
+ 775      74697365 
+ 775      6D656E74 
+ 776              	.LASF34:
+ 777 003f 4359424C 		.ascii	"CYBLE_EVT_GATTC_ERROR_RSP\000"
+ 777      455F4556 
+ 777      545F4741 
+ 777      5454435F 
+ 777      4552524F 
+ 778              	.LASF73:
+ 779 0059 64657669 		.ascii	"deviceConnected\000"
+ 779      6365436F 
+ 779      6E6E6563 
+ 779      74656400 
+ 780              	.LASF2:
+ 781 0069 73686F72 		.ascii	"short int\000"
+ 781      7420696E 
+ 781      7400
+ 782              	.LASF26:
+ 783 0073 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_FAILED\000"
+ 783      455F4556 
+ 783      545F4741 
+ 783      505F4155 
+ 783      54485F46 
+ 784              	.LASF36:
+ 785 008d 4359424C 		.ascii	"CYBLE_EVT_GATT_DISCONNECT_IND\000"
+ 785      455F4556 
+ 785      545F4741 
+ 785      54545F44 
+ 785      4953434F 
+ 786              	.LASF14:
+ 787 00ab 73697A65 		.ascii	"sizetype\000"
+ 787      74797065 
+ 787      00
+ 788              	.LASF69:
+ 789 00b4 6D61696E 		.ascii	"main\000"
+ 789      00
+ 790              	.LASF19:
+ 791 00b9 4359424C 		.ascii	"CYBLE_EVT_HCI_STATUS\000"
+ 791      455F4556 
+ 791      545F4843 
+ 791      495F5354 
+ 791      41545553 
+ 792              	.LASF40:
+ 793 00ce 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BY_TYPE_RSP\000"
+ 793      455F4556 
+ 793      545F4741 
+ 793      5454435F 
+ 793      52454144 
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 20
+
+
+ 794              	.LASF16:
+ 795 00ef 4359424C 		.ascii	"CYBLE_EVT_STACK_ON\000"
+ 795      455F4556 
+ 795      545F5354 
+ 795      41434B5F 
+ 795      4F4E00
+ 796              	.LASF37:
+ 797 0102 4359424C 		.ascii	"CYBLE_EVT_GATTS_XCNHG_MTU_REQ\000"
+ 797      455F4556 
+ 797      545F4741 
+ 797      5454535F 
+ 797      58434E48 
+ 798              	.LASF10:
+ 799 0120 75696E74 		.ascii	"uint16\000"
+ 799      313600
+ 800              	.LASF78:
+ 801 0127 2E5C6D61 		.ascii	".\\main.c\000"
+ 801      696E2E63 
+ 801      00
+ 802              	.LASF74:
+ 803 0130 73746172 		.ascii	"startNotification\000"
+ 803      744E6F74 
+ 803      69666963 
+ 803      6174696F 
+ 803      6E00
+ 804              	.LASF33:
+ 805 0142 4359424C 		.ascii	"CYBLE_EVT_GAP_KEYINFO_EXCHNGE_CMPLT\000"
+ 805      455F4556 
+ 805      545F4741 
+ 805      505F4B45 
+ 805      59494E46 
+ 806              	.LASF45:
+ 807 0166 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_MULTI_RSP\000"
+ 807      455F4556 
+ 807      545F4741 
+ 807      5454435F 
+ 807      52454144 
+ 808              	.LASF54:
+ 809 0185 4359424C 		.ascii	"CYBLE_EVT_GATTS_HANDLE_VALUE_CNF\000"
+ 809      455F4556 
+ 809      545F4741 
+ 809      5454535F 
+ 809      48414E44 
+ 810              	.LASF15:
+ 811 01a6 4359424C 		.ascii	"CYBLE_EVT_HOST_INVALID\000"
+ 811      455F4556 
+ 811      545F484F 
+ 811      53545F49 
+ 811      4E56414C 
+ 812              	.LASF59:
+ 813 01bd 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_CONN_IND\000"
+ 813      455F4556 
+ 813      545F4C32 
+ 813      4341505F 
+ 813      43424643 
+ 814              	.LASF62:
+ 815 01db 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DISCONN_CNF\000"
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 21
+
+
+ 815      455F4556 
+ 815      545F4C32 
+ 815      4341505F 
+ 815      43424643 
+ 816              	.LASF76:
+ 817 01fc 696E6974 		.ascii	"initializeCapSenseBaseline\000"
+ 817      69616C69 
+ 817      7A654361 
+ 817      7053656E 
+ 817      73654261 
+ 818              	.LASF43:
+ 819 0217 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_RSP\000"
+ 819      455F4556 
+ 819      545F4741 
+ 819      5454435F 
+ 819      52454144 
+ 820              	.LASF47:
+ 821 0230 4359424C 		.ascii	"CYBLE_EVT_GATTC_WRITE_RSP\000"
+ 821      455F4556 
+ 821      545F4741 
+ 821      5454435F 
+ 821      57524954 
+ 822              	.LASF6:
+ 823 024a 6C6F6E67 		.ascii	"long long int\000"
+ 823      206C6F6E 
+ 823      6720696E 
+ 823      7400
+ 824              	.LASF7:
+ 825 0258 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 825      206C6F6E 
+ 825      6720756E 
+ 825      7369676E 
+ 825      65642069 
+ 826              	.LASF4:
+ 827 026f 6C6F6E67 		.ascii	"long int\000"
+ 827      20696E74 
+ 827      00
+ 828              	.LASF53:
+ 829 0278 4359424C 		.ascii	"CYBLE_EVT_GATTC_HANDLE_VALUE_IND\000"
+ 829      455F4556 
+ 829      545F4741 
+ 829      5454435F 
+ 829      48414E44 
+ 830              	.LASF28:
+ 831 0299 4359424C 		.ascii	"CYBLE_EVT_GAP_DEVICE_CONNECTED\000"
+ 831      455F4556 
+ 831      545F4741 
+ 831      505F4445 
+ 831      56494345 
+ 832              	.LASF27:
+ 833 02b8 4359424C 		.ascii	"CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP\000"
+ 833      455F4556 
+ 833      545F4741 
+ 833      50505F41 
+ 833      44564552 
+ 834              	.LASF52:
+ 835 02e0 4359424C 		.ascii	"CYBLE_EVT_GATTC_HANDLE_VALUE_NTF\000"
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 22
+
+
+ 835      455F4556 
+ 835      545F4741 
+ 835      5454435F 
+ 835      48414E44 
+ 836              	.LASF20:
+ 837 0301 4359424C 		.ascii	"CYBLE_EVT_STACK_BUSY_STATUS\000"
+ 837      455F4556 
+ 837      545F5354 
+ 837      41434B5F 
+ 837      42555359 
+ 838              	.LASF24:
+ 839 031d 4359424C 		.ascii	"CYBLE_EVT_GAP_PASSKEY_DISPLAY_REQUEST\000"
+ 839      455F4556 
+ 839      545F4741 
+ 839      505F5041 
+ 839      53534B45 
+ 840              	.LASF60:
+ 841 0343 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_CONN_CNF\000"
+ 841      455F4556 
+ 841      545F4C32 
+ 841      4341505F 
+ 841      43424643 
+ 842              	.LASF68:
+ 843 0361 4359424C 		.ascii	"CYBLE_EVT_MAX\000"
+ 843      455F4556 
+ 843      545F4D41 
+ 843      5800
+ 844              	.LASF9:
+ 845 036f 75696E74 		.ascii	"uint8\000"
+ 845      3800
+ 846              	.LASF71:
+ 847 0375 70726F78 		.ascii	"proxCounter\000"
+ 847      436F756E 
+ 847      74657200 
+ 848              	.LASF56:
+ 849 0381 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CONN_PARAM_UPDATE_REQ\000"
+ 849      455F4556 
+ 849      545F4C32 
+ 849      4341505F 
+ 849      434F4E4E 
+ 850              	.LASF1:
+ 851 03a7 756E7369 		.ascii	"unsigned char\000"
+ 851      676E6564 
+ 851      20636861 
+ 851      7200
+ 852              	.LASF49:
+ 853 03b5 4359424C 		.ascii	"CYBLE_EVT_GATTS_PREP_WRITE_REQ\000"
+ 853      455F4556 
+ 853      545F4741 
+ 853      5454535F 
+ 853      50524550 
+ 854              	.LASF41:
+ 855 03d4 4359424C 		.ascii	"CYBLE_EVT_GATTC_FIND_INFO_RSP\000"
+ 855      455F4556 
+ 855      545F4741 
+ 855      5454435F 
+ 855      46494E44 
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 23
+
+
+ 856              	.LASF0:
+ 857 03f2 7369676E 		.ascii	"signed char\000"
+ 857      65642063 
+ 857      68617200 
+ 858              	.LASF46:
+ 859 03fe 4359424C 		.ascii	"CYBLE_EVT_GATTS_WRITE_REQ\000"
+ 859      455F4556 
+ 859      545F4741 
+ 859      5454535F 
+ 859      57524954 
+ 860              	.LASF42:
+ 861 0418 4359424C 		.ascii	"CYBLE_EVT_GATTC_FIND_BY_TYPE_VALUE_RSP\000"
+ 861      455F4556 
+ 861      545F4741 
+ 861      5454435F 
+ 861      46494E44 
+ 862              	.LASF25:
+ 863 043f 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_COMPLETE\000"
+ 863      455F4556 
+ 863      545F4741 
+ 863      505F4155 
+ 863      54485F43 
+ 864              	.LASF8:
+ 865 045b 756E7369 		.ascii	"unsigned int\000"
+ 865      676E6564 
+ 865      20696E74 
+ 865      00
+ 866              	.LASF35:
+ 867 0468 4359424C 		.ascii	"CYBLE_EVT_GATT_CONNECT_IND\000"
+ 867      455F4556 
+ 867      545F4741 
+ 867      54545F43 
+ 867      4F4E4E45 
+ 868              	.LASF5:
+ 869 0483 6C6F6E67 		.ascii	"long unsigned int\000"
+ 869      20756E73 
+ 869      69676E65 
+ 869      6420696E 
+ 869      7400
+ 870              	.LASF22:
+ 871 0495 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_REQ\000"
+ 871      455F4556 
+ 871      545F4741 
+ 871      505F4155 
+ 871      54485F52 
+ 872              	.LASF61:
+ 873 04ac 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DISCONN_IND\000"
+ 873      455F4556 
+ 873      545F4C32 
+ 873      4341505F 
+ 873      43424643 
+ 874              	.LASF30:
+ 875 04cd 4359424C 		.ascii	"CYBLE_EVT_GAP_ENCRYPT_CHANGE\000"
+ 875      455F4556 
+ 875      545F4741 
+ 875      505F454E 
+ 875      43525950 
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 24
+
+
+ 876              	.LASF3:
+ 877 04ea 73686F72 		.ascii	"short unsigned int\000"
+ 877      7420756E 
+ 877      7369676E 
+ 877      65642069 
+ 877      6E7400
+ 878              	.LASF70:
+ 879 04fd 496E6974 		.ascii	"InitializeSystem\000"
+ 879      69616C69 
+ 879      7A655379 
+ 879      7374656D 
+ 879      00
+ 880              	.LASF72:
+ 881 050e 70726F78 		.ascii	"proximityValue\000"
+ 881      696D6974 
+ 881      7956616C 
+ 881      756500
+ 882              	.LASF31:
+ 883 051d 4359424C 		.ascii	"CYBLE_EVT_GAP_CONNECTION_UPDATE_COMPLETE\000"
+ 883      455F4556 
+ 883      545F4741 
+ 883      505F434F 
+ 883      4E4E4543 
+ 884              	.LASF13:
+ 885 0546 63686172 		.ascii	"char\000"
+ 885      00
+ 886              	.LASF58:
+ 887 054b 4359424C 		.ascii	"CYBLE_EVT_L2CAP_COMMAND_REJ\000"
+ 887      455F4556 
+ 887      545F4C32 
+ 887      4341505F 
+ 887      434F4D4D 
+ 888              	.LASF44:
+ 889 0567 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BLOB_RSP\000"
+ 889      455F4556 
+ 889      545F4741 
+ 889      5454435F 
+ 889      52454144 
+ 890              	.LASF51:
+ 891 0585 4359424C 		.ascii	"CYBLE_EVT_GATTC_EXEC_WRITE_RSP\000"
+ 891      455F4556 
+ 891      545F4741 
+ 891      5454435F 
+ 891      45584543 
+ 892              	.LASF32:
+ 893 05a4 4359424C 		.ascii	"CYBLE_EVT_GAPC_SCAN_START_STOP\000"
+ 893      455F4556 
+ 893      545F4741 
+ 893      50435F53 
+ 893      43414E5F 
+ 894              	.LASF67:
+ 895 05c3 4359424C 		.ascii	"CYBLE_EVT_PENDING_FLASH_WRITE\000"
+ 895      455F4556 
+ 895      545F5045 
+ 895      4E44494E 
+ 895      475F464C 
+ 896              	.LASF64:
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 25
+
+
+ 897 05e1 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_RX_CREDIT_IND\000"
+ 897      455F4556 
+ 897      545F4C32 
+ 897      4341505F 
+ 897      43424643 
+ 898              	.LASF12:
+ 899 0604 646F7562 		.ascii	"double\000"
+ 899      6C6500
+ 900              	.LASF65:
+ 901 060b 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_TX_CREDIT_IND\000"
+ 901      455F4556 
+ 901      545F4C32 
+ 901      4341505F 
+ 901      43424643 
+ 902              	.LASF80:
+ 903 062e 48616E64 		.ascii	"HandleCapSenseProximity\000"
+ 903      6C654361 
+ 903      7053656E 
+ 903      73655072 
+ 903      6F78696D 
+ 904              	.LASF18:
+ 905 0646 4359424C 		.ascii	"CYBLE_EVT_HARDWARE_ERROR\000"
+ 905      455F4556 
+ 905      545F4841 
+ 905      52445741 
+ 905      52455F45 
+ 906              	.LASF63:
+ 907 065f 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DATA_READ\000"
+ 907      455F4556 
+ 907      545F4C32 
+ 907      4341505F 
+ 907      43424643 
+ 908              	.LASF57:
+ 909 067e 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CONN_PARAM_UPDATE_RSP\000"
+ 909      455F4556 
+ 909      545F4C32 
+ 909      4341505F 
+ 909      434F4E4E 
+ 910              	.LASF21:
+ 911 06a4 4359424C 		.ascii	"CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT\000"
+ 911      455F4556 
+ 911      545F4741 
+ 911      50435F53 
+ 911      43414E5F 
+ 912              	.LASF79:
+ 913 06c8 433A5C55 		.ascii	"C:\\Users\\Adeel\\Downloads\\PSoC_4_BLE_CapSense_Pr"
+ 913      73657273 
+ 913      5C416465 
+ 913      656C5C44 
+ 913      6F776E6C 
+ 914 06f7 6F78696D 		.ascii	"oximity.cywrk.Archive01 (1)\\PSoC_4_BLE_CapSense_Pr"
+ 914      6974792E 
+ 914      63797772 
+ 914      6B2E4172 
+ 914      63686976 
+ 915 0729 6F78696D 		.ascii	"oximity\\PSoC_4_BLE_CapSense_Proximity.cydsn\000"
+ 915      6974795C 
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 26
+
+
+ 915      50536F43 
+ 915      5F345F42 
+ 915      4C455F43 
+ 916              	.LASF39:
+ 917 0755 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BY_GROUP_TYPE_RSP\000"
+ 917      455F4556 
+ 917      545F4741 
+ 917      5454435F 
+ 917      52454144 
+ 918              	.LASF48:
+ 919 077c 4359424C 		.ascii	"CYBLE_EVT_GATTS_WRITE_CMD_REQ\000"
+ 919      455F4556 
+ 919      545F4741 
+ 919      5454535F 
+ 919      57524954 
+ 920              	.LASF38:
+ 921 079a 4359424C 		.ascii	"CYBLE_EVT_GATTC_XCHNG_MTU_RSP\000"
+ 921      455F4556 
+ 921      545F4741 
+ 921      5454435F 
+ 921      5843484E 
+ 922              	.LASF66:
+ 923 07b8 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DATA_WRITE_IND\000"
+ 923      455F4556 
+ 923      545F4C32 
+ 923      4341505F 
+ 923      43424643 
+ 924              	.LASF17:
+ 925 07dc 4359424C 		.ascii	"CYBLE_EVT_TIMEOUT\000"
+ 925      455F4556 
+ 925      545F5449 
+ 925      4D454F55 
+ 925      5400
+ 926              	.LASF50:
+ 927 07ee 4359424C 		.ascii	"CYBLE_EVT_GATTS_EXEC_WRITE_REQ\000"
+ 927      455F4556 
+ 927      545F4741 
+ 927      5454535F 
+ 927      45584543 
+ 928              	.LASF29:
+ 929 080d 4359424C 		.ascii	"CYBLE_EVT_GAP_DEVICE_DISCONNECTED\000"
+ 929      455F4556 
+ 929      545F4741 
+ 929      505F4445 
+ 929      56494345 
+ 930              	.LASF55:
+ 931 082f 4359424C 		.ascii	"CYBLE_EVT_GATTS_DATA_SIGNED_CMD_REQ\000"
+ 931      455F4556 
+ 931      545F4741 
+ 931      5454535F 
+ 931      44415441 
+ 932              	.LASF77:
+ 933 0853 474E5520 		.ascii	"GNU C 4.8.4 20140526 (release) [ARM/embedded-4_8-br"
+ 933      4320342E 
+ 933      382E3420 
+ 933      32303134 
+ 933      30353236 
+ARM GAS  C:\Users\Adeel\AppData\Local\Temp\cceBiFfP.s 			page 27
+
+
+ 934 0886 616E6368 		.ascii	"anch revision 211358] -mcpu=cortex-m0 -mthumb -g -O"
+ 934      20726576 
+ 934      6973696F 
+ 934      6E203231 
+ 934      31333538 
+ 935 08b9 30202D66 		.ascii	"0 -ffunction-sections\000"
+ 935      66756E63 
+ 935      74696F6E 
+ 935      2D736563 
+ 935      74696F6E 
+ 936              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.8.4 20140526 (release) [ARM/embedded-4_8-br
